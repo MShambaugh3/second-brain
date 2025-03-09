@@ -1,6 +1,6 @@
 import { useState } from "react";
-import NotesPage from "../components/Notes";
-import CalendarPage from "../components/Calendar";
+import NotesPage from "../components/notes";
+import CalendarPage from "../components/calendar";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("notes");
