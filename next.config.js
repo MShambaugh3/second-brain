@@ -1,11 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  distDir: 'out',
   images: {
-    unoptimized: true, // Fix images for GitHub Pages
+    unoptimized: true, // Fix images for deployment
   },
-  assetPrefix: "./", // Ensures correct asset loading for GitHub Pages
   trailingSlash: true, // Ensures correct routing on GitHub Pages
 };
 
