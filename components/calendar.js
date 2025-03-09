@@ -1,58 +1,42 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
 
-export default function NotesPage() {
-  const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState('');
+export default function CalendarPage() {
+  const [events, setEvents] = useState([]);
 
-  // Load notes from API when the page loads
   useEffect(() => {
-    fetch('/api/notes')
+    fetch("/api/events")
       .then((res) => res.json())
-      .then((data) => setNotes(data));
+      .then((data) => setEvents(data));
   }, []);
 
-  // Function to add a new note
-  const addNote = async () => {
-    const id = Date.now().toString();
-    await fetch('/api/notes', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, content: newNote }),
-    });
-    setNotes([...notes, { id, content: newNote }]);
-    setNewNote('');
-  };
+  const handleDateClick = async (info) => {
+    const title = prompt("Enter event title:");
+    if (!title) return;
 
-  // Function to delete a note
-  const deleteNote = async (id) => {
-    await fetch('/api/notes', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id }),
+    const newEvent = { title, date: info.dateStr };
+
+    await fetch("/api/events", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newEvent),
     });
-    setNotes(notes.filter((note) => note.id !== id));
+
+    setEvents([...events, newEvent]);
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Notes</h1>
-      <input
-        type="text"
-        placeholder="Write a note..."
-        value={newNote}
-        onChange={(e) => setNewNote(e.target.value)}
-        style={{ padding: '10px', width: '80%', marginRight: '10px' }}
+    <div style={{ padding: "20px" }}>
+      <h1>Calendar</h1>
+      <FullCalendar
+        plugins={[dayGridPlugin, interactionPlugin]}
+        initialView="dayGridMonth"
+        events={events}
+        dateClick={handleDateClick}
+        style={{ marginTop: "20px" }}
       />
-      <button onClick={addNote} style={{ padding: '10px' }}>Add Note</button>
-      
-      <ul style={{ marginTop: '20px' }}>
-        {notes.map((note) => (
-          <li key={note.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px', border: '1px solid #ddd', marginBottom: '5px' }}>
-            {note.content}
-            <button onClick={() => deleteNote(note.id)} style={{ background: 'red', color: 'white', padding: '5px' }}>Delete</button>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
