@@ -1,6 +1,7 @@
 import { useState } from "react";
-import NotesPage from "../components/notes";
-import CalendarPage from "../components/calendar";
+import NotesPage from "../components/Notes";
+import CalendarPage from "../components/Calendar";
+import TaskManager from "../components/TaskManager";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("notes");
@@ -17,6 +18,9 @@ export default function Dashboard() {
           <li style={{ padding: "10px", cursor: "pointer" }} onClick={() => setActiveTab("calendar")}>
             📅 Calendar
           </li>
+          <li style={{ padding: "10px", cursor: "pointer" }} onClick={() => setActiveTab("tasks")}>
+            ✅ Tasks
+          </li>
         </ul>
       </div>
 
@@ -24,6 +28,7 @@ export default function Dashboard() {
       <div style={{ flex: 1, padding: "20px" }}>
         {activeTab === "notes" && <NotesPage />}
         {activeTab === "calendar" && <CalendarPage />}
+        {activeTab === "tasks" && <TaskManager />}
       </div>
     </div>
   );
